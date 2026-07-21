@@ -32,15 +32,13 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .view{position:absolute;inset:0;display:none;flex-direction:column}
 .view.on{display:flex}
 
-/* banner de status dos dados */
 .dbanner{position:fixed;left:10px;right:10px;top:calc(var(--sat) + 6px);z-index:400;
-  border-radius:13px;padding:10px 13px;font-size:11.5px;line-height:1.45;display:none;
-  backdrop-filter:blur(10px)}
+  border-radius:13px;padding:10px 13px;font-size:11.5px;line-height:1.45;display:none;backdrop-filter:blur(10px)}
 .dbanner.demo{display:block;background:rgba(255,176,32,.14);border:1px solid rgba(255,176,32,.4);color:#FFD98A}
 .dbanner.err{display:block;background:rgba(255,77,125,.14);border:1px solid rgba(255,77,125,.4);color:#FF9FB8}
 .dbanner b{color:#fff}
 
-/* ---- feed tela cheia ---- */
+/* ---- feed ---- */
 .reels{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;
   scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .reels::-webkit-scrollbar{display:none}
@@ -51,8 +49,7 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .reel .emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-size:120px;opacity:.14;z-index:1}
 .rinfo{position:absolute;left:0;right:70px;bottom:18px;z-index:5;padding:0 18px}
-.rvenue{font-family:'Space Grotesk';font-weight:700;font-size:26px;line-height:1.1;
-  text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.rvenue{font-family:'Space Grotesk';font-weight:700;font-size:26px;line-height:1.1;text-shadow:0 2px 18px rgba(0,0,0,.7)}
 .rbairro{font-size:12.5px;color:rgba(255,255,255,.75);margin-top:5px}
 .rtags{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
 .rtag{font-size:11.5px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.13);
@@ -60,12 +57,18 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .rtag.live{background:rgba(255,77,125,.22)}
 .rtag.pred{background:rgba(143,180,255,.14);border-color:rgba(143,180,255,.35);color:#B9CDFF}
 .rgo{margin-top:13px;display:inline-flex;align-items:center;gap:7px;background:var(--txt);color:#05071A;
-  font-family:'Space Grotesk';font-weight:700;font-size:14px;padding:11px 19px;border-radius:14px;border:none}
+  font-family:'Space Grotesk';font-weight:700;font-size:14px;padding:11px 19px;border-radius:14px;border:none;cursor:pointer}
 .rgo:active{transform:scale(.97)}
 .rail{position:absolute;right:11px;bottom:24px;z-index:6;display:flex;flex-direction:column;align-items:center;gap:19px}
 .rbtn{background:none;border:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;
   font-size:10.5px;font-family:'Inter';font-weight:600;cursor:pointer;text-shadow:0 1px 6px rgba(0,0,0,.6)}
-.rbtn .ic{font-size:26px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+.rbtn .ic{font-size:26px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));transition:transform .15s}
+.rbtn:active .ic{transform:scale(1.25)}
+.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  color:var(--mut);font-size:13.5px;text-align:center;padding:0 30px}
+.empty .big{font-size:44px}
+.empty button{margin-top:8px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
+  padding:10px 18px;border-radius:12px;font-family:'Inter';font-size:13px;cursor:pointer}
 .swipehint{position:absolute;bottom:calc(var(--navh) + 8px);left:50%;transform:translateX(-50%);z-index:7;
   font-size:11px;color:rgba(255,255,255,.5);animation:bob 2s ease-in-out infinite;pointer-events:none}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.5}50%{transform:translateX(-50%) translateY(-5px);opacity:.85}}
@@ -77,17 +80,21 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .logo b{color:var(--amber);font-weight:600}
 .loc{display:flex;align-items:center;gap:4px;font-size:11.5px;color:rgba(255,255,255,.75);margin-top:3px}
 .loc svg{width:10px;height:10px;fill:var(--amber)}
-.me{width:31px;height:31px;border-radius:50%;background:linear-gradient(135deg,#3B5BDB,#FF4D7D);
-  border:2px solid rgba(255,255,255,.3);flex:none}
+.hbtns{display:flex;gap:9px;align-items:center}
+.gpsbtn{width:31px;height:31px;border-radius:50%;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
+.gpsbtn.on{background:rgba(37,217,201,.25);border-color:var(--teal)}
 .stories{display:flex;gap:13px;overflow-x:auto;padding:13px 2px 4px;margin-top:2px;scrollbar-width:none;pointer-events:auto}
 .stories::-webkit-scrollbar{display:none}
 .st{flex:none;width:58px;text-align:center;cursor:pointer}
 .st .ring{width:54px;height:54px;border-radius:50%;padding:2.5px;background:rgba(255,255,255,.18)}
 .st.live .ring{background:conic-gradient(from 0deg,var(--hot),var(--amber),var(--teal),var(--hot));animation:spin 6s linear infinite}
+.st.sel .ring{background:var(--txt);animation:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .st .inner{width:100%;height:100%;border-radius:50%;border:2.5px solid var(--bg);
   display:flex;align-items:center;justify-content:center;font-size:20px;background:#12162e}
 .st.live .inner{animation:spin 6s linear infinite reverse}
+.st.sel .inner{animation:none}
 .st .nm{font-size:9.5px;color:rgba(255,255,255,.85);margin-top:5px;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;font-weight:500;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .st .cnt{font-size:9px;color:var(--teal);font-weight:600}
@@ -131,45 +138,43 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .traylist{flex:1;overflow-y:auto;padding:4px 14px 70px;overscroll-behavior:contain}
 .acard{display:flex;gap:12px;padding:9px;border-radius:17px;margin-bottom:8px;cursor:pointer;border:1px solid transparent}
 .acard:active{background:var(--panel);border-color:var(--line)}
-.acard .th2{width:70px;height:70px;border-radius:14px;flex:none;display:flex;align-items:center;
-  justify-content:center;font-size:29px}
+.acard .th2{width:70px;height:70px;border-radius:14px;flex:none;display:flex;align-items:center;justify-content:center;font-size:29px}
 .acard .ac{flex:1;min-width:0;padding-top:3px}
 .acard .an{font-family:'Space Grotesk';font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .acard .am{font-size:11.5px;color:var(--mut);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .acard .dotv{width:7px;height:7px;border-radius:50%;flex:none}
 .acard .aw{font-size:11px;color:var(--mut2);margin-top:4px}
 
-/* ---- bora ---- */
+/* ---- bora / perfil ---- */
 .bora{padding:calc(var(--sat) + 16px) 20px 0;flex:none}
 .bora h2{font-size:21px}
 .bora p{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.5}
 .bora p b{color:var(--txt)}
 .rtlist{flex:1;overflow-y:auto;padding:16px 18px 20px}
-.rstep{display:flex;gap:13px;position:relative;padding-bottom:18px}
+.rstep{display:flex;gap:13px;position:relative;padding-bottom:18px;cursor:pointer}
 .rstep:not(:last-child)::before{content:"";position:absolute;left:27px;top:57px;bottom:0;width:2px;
   background:linear-gradient(var(--amber),transparent)}
-.rstep .tb{width:55px;height:55px;border-radius:17px;flex:none;display:flex;align-items:center;
-  justify-content:center;font-size:24px}
+.rstep .tb{width:55px;height:55px;border-radius:17px;flex:none;display:flex;align-items:center;justify-content:center;font-size:24px}
 .rt-t{font-size:11px;color:var(--amber);font-weight:700}
 .rt-n{font-family:'Space Grotesk';font-weight:600;font-size:15.5px;margin-top:1px}
 .rt-m{font-size:12px;color:var(--mut);margin-top:2px}
 
 /* ---- nav ---- */
 .nav{flex:none;height:var(--navh);display:flex;align-items:flex-start;justify-content:space-around;
-  padding:9px 16px 0;background:rgba(5,7,20,.92);backdrop-filter:blur(18px);
-  border-top:1px solid var(--line);z-index:40}
+  padding:9px 16px 0;background:rgba(5,7,20,.92);backdrop-filter:blur(18px);border-top:1px solid var(--line);z-index:40}
 .nav button{background:none;border:none;color:var(--mut2);display:flex;flex-direction:column;align-items:center;
-  gap:3px;font-size:9.5px;font-family:'Inter';font-weight:500;cursor:pointer;width:50px}
+  gap:3px;font-size:9.5px;font-family:'Inter';font-weight:500;cursor:pointer;width:50px;position:relative}
 .nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9}
 .nav button.on{color:var(--txt)}
+.nav .badge{position:absolute;top:-3px;right:6px;background:var(--hot);color:#fff;font-size:8.5px;font-weight:700;
+  min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px}
 .fab{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,var(--amber),#FF7A3D);
   display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(255,122,61,.42);
   margin-top:-13px;flex:none;border:none}
 .fab svg{width:24px;height:24px;stroke:#1a0e00;stroke-width:2.3;fill:none}
 
-/* ---- sheet postar ---- */
-.sheet{position:fixed;inset:0;z-index:100;background:rgba(5,7,20,.66);backdrop-filter:blur(5px);
-  display:none;align-items:flex-end}
+/* ---- sheets ---- */
+.sheet{position:fixed;inset:0;z-index:100;background:rgba(5,7,20,.66);backdrop-filter:blur(5px);display:none;align-items:flex-end}
 .sheet.on{display:flex}
 .scard{width:100%;background:var(--panel);border-radius:26px 26px 0 0;
   padding:8px 20px calc(20px + var(--sab));animation:up .3s cubic-bezier(.2,.8,.3,1);max-height:92dvh;overflow-y:auto}
@@ -178,9 +183,25 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .rule{display:flex;gap:9px;font-size:11.5px;color:var(--mut);padding:9px 12px;background:var(--panel2);
   border-radius:11px;margin-bottom:8px;line-height:1.45;align-items:center}
 .rule b{color:var(--txt)}
+/* detalhe do local */
+.dhero{border-radius:18px;padding:18px;display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.dhero .de{font-size:42px}
+.dhero .dn{font-family:'Space Grotesk';font-weight:700;font-size:19px;line-height:1.15}
+.dhero .dm{font-size:12px;color:rgba(255,255,255,.85);margin-top:4px}
+.dstats{display:flex;gap:8px;margin-bottom:14px}
+.dstat{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:10px;text-align:center}
+.dstat .l{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2)}
+.dstat .v{font-family:'Space Grotesk';font-weight:700;font-size:15px;margin-top:3px}
+.dact{display:flex;gap:9px}
+.dact button{flex:1;padding:14px 8px;border:none;border-radius:14px;font-family:'Space Grotesk';font-weight:700;
+  font-size:13.5px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.dact .go{background:linear-gradient(135deg,var(--amber),#FF7A3D);color:#1a0e00}
+.dact .sec{background:var(--panel2);color:var(--txt);border:1px solid var(--line)}
+.dact .sec.saved{color:var(--amber);border-color:rgba(255,176,32,.5)}
+.dact .di{font-size:18px}
 
 .toast{position:fixed;left:50%;bottom:calc(var(--navh) + 18px);transform:translateX(-50%) translateY(16px);
-  z-index:200;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 17px;
+  z-index:300;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 17px;
   font-size:12.5px;opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -204,9 +225,11 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
         <div class="hrow">
           <div>
             <div class="logo">OQH<b>á?</b></div>
-            <div class="loc"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z"/></svg> João Pessoa · <span id="cityWord">…</span></div>
+            <div class="loc"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z"/></svg> <span id="locTxt">João Pessoa</span> · <span id="cityWord">…</span></div>
           </div>
-          <div class="me"></div>
+          <div class="hbtns">
+            <button class="gpsbtn" id="gpsBtn" title="Usar minha localização">📍</button>
+          </div>
         </div>
         <div class="stories" id="stories"></div>
       </div>
@@ -228,8 +251,13 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
     </div>
 
     <div class="view" id="vBora">
-      <div class="bora"><h2>Bora agora?</h2><p id="borasub">Um roteiro montado com os locais mais vivos de agora.</p></div>
+      <div class="bora"><h2>Bora agora?</h2><p id="borasub"></p></div>
       <div class="rtlist" id="rtlist"></div>
+    </div>
+
+    <div class="view" id="vPerfil">
+      <div class="bora"><h2>Seus lugares</h2><p>Salvos no seu aparelho. Toque para abrir.</p></div>
+      <div class="rtlist" id="savedlist"></div>
     </div>
 
   </div>
@@ -239,27 +267,30 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
     <button data-v="Mapa"><svg viewBox="0 0 24 24"><path d="M9 20l-6 2V6l6-2m0 16l6-2m-6 2V4m6 14l6 2V4l-6-2m0 16V2m0 0L9 4"/></svg>Mapa</button>
     <button class="fab" id="openPost"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
     <button data-v="Bora"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>Bora</button>
-    <button data-v="Perfil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/></svg>Perfil</button>
+    <button data-v="Perfil" id="navPerfil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/></svg>Perfil<span class="badge" id="savedBadge" style="display:none">0</span></button>
   </div>
 </div>
 
-<div class="sheet" id="sheet"><div class="scard">
+<!-- sheet: detalhe do local -->
+<div class="sheet" id="dsheet"><div class="scard" id="dcard"></div></div>
+
+<!-- sheet: postar -->
+<div class="sheet" id="psheet"><div class="scard">
   <div class="grab"></div>
   <h3 style="margin-bottom:10px">📸 Postar foto no local</h3>
-  <div class="rule"><span>🚧</span><span><b>Em breve.</b> As fotos dos usuários são a Camada 4 — precisam do app com login e câmera. Hoje o OQHá mostra a <b>previsão</b> calculada pelo motor.</span></div>
-  <div class="rule"><span>⏳</span><span>Quando existirem, as fotos <b>somem em 24h</b> e têm <b>aviso de print</b>.</span></div>
+  <div class="rule"><span>🚧</span><span><b>Em breve.</b> As fotos são a próxima fase — precisam de login e câmera. Hoje o OQHá mostra a <b>previsão</b> do motor.</span></div>
+  <div class="rule"><span>⏳</span><span>Quando existirem: fotos <b>somem em 24h</b> e têm <b>aviso de print</b>.</span></div>
 </div></div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 /* ================================================================
-   CONFIG — cole aqui os SEUS valores (os dois são públicos/seguros
-   para o app; a chave secreta NUNCA entra aqui):
+   CONFIG — cole seus valores (ambos são públicos/seguros p/ o app):
 ================================================================ */
 const CONFIG = {
   SUPABASE_URL: 'https://xsybmiuiugnsrgzmtfba.supabase.co',
-  SUPABASE_PUBLISHABLE_KEY: 'COLE_AQUI_SUA_CHAVE_PUBLISHABLE'  // sb_publishable_...
+  SUPABASE_PUBLISHABLE_KEY: 'COLE_AQUI_SUA_CHAVE_PUBLISHABLE'
 };
 /* ============================================================== */
 
@@ -280,14 +311,40 @@ const scOf=c=>SC[c]||SC.turismo;
 const hc=v=>v>.82?'#FF2E63':v>.62?'#FF4D7D':v>.42?'#FFB020':v>.18?'#25D9C9':'#4B5488';
 const hw=v=>v>.82?'Lotado':v>.62?'Fervendo':v>.42?'Animado':v>.18?'Tranquilo':'Quieto';
 const trTxt={subindo:['▲','enchendo','#25D9C9'],pico:['●','no pico','#FFB020'],esvaziando:['▼','esvaziando','#FF4D7D']};
-const CENTRO={lat:-7.108,lng:-34.822}; // Tambaú
+let CENTRO={lat:-7.108,lng:-34.822};
 const km=(a,b)=>{const R=6371,d=Math.PI/180;const x=(b.lat-a.lat)*d,y=(b.lng-a.lng)*d;
   const h=Math.sin(x/2)**2+Math.cos(a.lat*d)*Math.cos(b.lat*d)*Math.sin(y/2)**2;
   return R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h));};
 const $=s=>document.querySelector(s);
-let VEN=[];
+let VEN=[],filtroBairro=null;
 
-/* ---- dados demo (fallback se não configurado/erro) ---- */
+/* ---- persistência: salvos (funciona hospedado; some só se limpar dados do navegador) ---- */
+function loadSaved(){try{return new Set(JSON.parse(localStorage.getItem('oqha_salvos')||'[]'))}catch(e){return new Set()}}
+function persistSaved(){try{localStorage.setItem('oqha_salvos',JSON.stringify([...SAVED]))}catch(e){}}
+let SAVED=loadSaved();
+function updateBadge(){const b=$('#savedBadge');b.textContent=SAVED.size;b.style.display=SAVED.size?'flex':'none';}
+function toggleSave(nome){
+  if(SAVED.has(nome)){SAVED.delete(nome);toast('Removido dos seus lugares');}
+  else{SAVED.add(nome);toast('🔖 Salvo nos seus lugares');}
+  persistSaved();updateBadge();renderSaved();
+}
+
+/* ---- compartilhar (nativo no celular; WhatsApp no PC) ---- */
+async function shareVenue(v){
+  const texto=`OQHá? ${v.nome} está ${hw(v.viv).toLowerCase()} agora em ${v.bairro||'João Pessoa'} 🔥`;
+  const url=location.href.split('#')[0];
+  if(navigator.share){
+    try{await navigator.share({title:'OQHá?',text:texto,url});return}catch(e){if(e.name==='AbortError')return}
+  }
+  window.open('https://wa.me/?text='+encodeURIComponent(texto+' '+url),'_blank');
+}
+
+/* ---- como chegar ---- */
+function directions(v){
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${v.lat},${v.lng}&travelmode=driving`,'_blank');
+}
+
+/* ---- dados ---- */
 const DEMO=[
   {nome:'Bar do Cais',categoria:'bar',lat:-7.108,lng:-34.821,bairro:'Tambaú',viv:.78,traj:'subindo'},
   {nome:'Orla Music Club',categoria:'show',lat:-7.105,lng:-34.823,bairro:'Tambaú',viv:.85,traj:'pico'},
@@ -295,13 +352,9 @@ const DEMO=[
   {nome:'Rooftop Manaíra',categoria:'bar',lat:-7.095,lng:-34.828,bairro:'Manaíra',viv:.72,traj:'subindo'},
   {nome:'Parque Solon de Lucena',categoria:'parque',lat:-7.118,lng:-34.879,bairro:'Centro',viv:.15,traj:'esvaziando'}
 ];
-
 async function loadData(){
   const cfgOk=CONFIG.SUPABASE_URL.startsWith('https://')&&CONFIG.SUPABASE_PUBLISHABLE_KEY.startsWith('sb_');
-  if(!cfgOk){
-    banner('demo','<b>Modo demonstração.</b> Cole sua chave publishable no CONFIG (dentro do arquivo) para ver os dados reais de João Pessoa.');
-    return DEMO;
-  }
+  if(!cfgOk){banner('demo','<b>Modo demonstração.</b> Cole sua chave publishable no CONFIG do arquivo para ver João Pessoa de verdade.');return DEMO;}
   try{
     const u=`${CONFIG.SUPABASE_URL}/rest/v1/estabelecimentos?select=nome,categoria,lat,lng,bairro,vivacidade(viv_prevista,trajetoria,clima)&limit=1000`;
     const r=await fetch(u,{headers:{apikey:CONFIG.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${CONFIG.SUPABASE_PUBLISHABLE_KEY}`}});
@@ -313,25 +366,62 @@ async function loadData(){
     if(!out.length)throw new Error('sem dados');
     return out;
   }catch(e){
-    banner('err','<b>Não consegui ler o Supabase</b> ('+e.message+'). Mostrando demonstração. Confira URL/chave no CONFIG e se as tabelas têm dados.');
+    banner('err','<b>Não consegui ler o Supabase</b> ('+e.message+'). Mostrando demonstração.');
     return DEMO;
   }
 }
 function banner(cls,html){const b=$('#dbanner');b.className='dbanner '+cls;b.innerHTML=html;
   setTimeout(()=>b.style.display='none',9000);}
 
+/* ---- ficha do local ---- */
+let CUR=null;
+function showDetail(nome){
+  const v=VEN.find(x=>x.nome===nome);if(!v)return;
+  CUR=v;
+  const s=scOf(v.categoria),t=trTxt[v.traj]||trTxt.pico,d=km(CENTRO,v).toFixed(1);
+  const isSaved=SAVED.has(v.nome);
+  $('#dcard').innerHTML=`
+    <div class="grab"></div>
+    <div class="dhero" style="background:${s.g}">
+      <div class="de">${s.e}</div>
+      <div><div class="dn">${v.nome}</div>
+        <div class="dm">${v.bairro||'João Pessoa'} · ${d}km de você</div></div>
+    </div>
+    <div class="dstats">
+      <div class="dstat"><div class="l">Agora</div><div class="v" style="color:${hc(v.viv)}">${hw(v.viv)}</div></div>
+      <div class="dstat"><div class="l">Tendência</div><div class="v" style="color:${t[2]}">${t[0]} ${t[1]}</div></div>
+      <div class="dstat"><div class="l">Fonte</div><div class="v" style="color:#B9CDFF">previsão</div></div>
+    </div>
+    <div class="dact">
+      <button class="go" onclick="directions(CUR)"><span class="di">🧭</span>Como chegar</button>
+      <button class="sec ${isSaved?'saved':''}" onclick="toggleSave(CUR.nome);showDetail(CUR.nome)">
+        <span class="di">${isSaved?'✅':'🔖'}</span>${isSaved?'Salvo':'Salvar'}</button>
+      <button class="sec" onclick="shareVenue(CUR)"><span class="di">↗️</span>Enviar</button>
+    </div>`;
+  $('#dsheet').classList.add('on');
+}
+
 /* ---- feed ---- */
 function renderFeed(){
-  const top=VEN.slice().sort((a,b)=>b.viv-a.viv).slice(0,15);
+  const base=filtroBairro?VEN.filter(v=>v.bairro===filtroBairro):VEN;
+  const top=base.slice().sort((a,b)=>b.viv-a.viv).slice(0,15);
+  if(!top.length){
+    $('#reels').innerHTML=`<div class="empty"><div class="big">🌙</div>
+      <div>Nada por aqui agora${filtroBairro?' em '+filtroBairro:''}.</div>
+      <button onclick="setFiltro(null)">Ver a cidade toda</button></div>`;
+    return;
+  }
   $('#reels').innerHTML=top.map(v=>{
     const s=scOf(v.categoria),col=hc(v.viv),t=trTxt[v.traj]||trTxt.pico;
     const d=km(CENTRO,v).toFixed(1);
+    const nm=v.nome.replace(/'/g,'&#39;');
+    const isSaved=SAVED.has(v.nome);
     return `<div class="reel">
       <div class="bgph" style="background:${s.g}"></div>
       <div class="emoji">${s.e}</div>
       <div class="rail">
-        <button class="rbtn" onclick="toast('Salvo pra depois')"><span class="ic">🔖</span><span>salvar</span></button>
-        <button class="rbtn" onclick="toast('OQHá? — mandando pro grupo')"><span class="ic">↗️</span><span>enviar</span></button>
+        <button class="rbtn" onclick="toggleSave('${nm}');renderFeed()"><span class="ic">${isSaved?'✅':'🔖'}</span><span>${isSaved?'salvo':'salvar'}</span></button>
+        <button class="rbtn" onclick="shareVenue(VEN.find(x=>x.nome==='${nm}'))"><span class="ic">↗️</span><span>enviar</span></button>
       </div>
       <div class="rinfo">
         <div class="rvenue">${v.nome}</div>
@@ -341,43 +431,52 @@ function renderFeed(){
           <span class="rtag" style="color:${t[2]}">${t[0]} ${t[1]}</span>
           <span class="rtag pred">previsão</span>
         </div>
-        <button class="rgo" onclick="nav('Bora')">Bora pra lá →</button>
+        <button class="rgo" onclick="showDetail('${nm}')">Bora pra lá →</button>
       </div></div>`;
   }).join('');
-  const media=VEN.reduce((a,v)=>a+v.viv,0)/VEN.length;
+  const media=VEN.reduce((a,v)=>a+v.viv,0)/(VEN.length||1);
   $('#cityWord').textContent=hw(Math.min(1,media*2.2)).toLowerCase();
 }
 
-/* ---- stories = bairros ---- */
+/* ---- stories = filtro por bairro ---- */
+function setFiltro(b){
+  filtroBairro=(filtroBairro===b)?null:b;
+  renderFeed();renderStories();
+  $('#reels').scrollTop=0;
+  toast(filtroBairro?('Mostrando só '+filtroBairro):'Mostrando a cidade toda');
+}
 function renderStories(){
   const bz={};
   VEN.forEach(v=>{if(!v.bairro)return;(bz[v.bairro]=bz[v.bairro]||[]).push(v.viv);});
   const list=Object.entries(bz).map(([b,arr])=>({b,m:arr.reduce((a,x)=>a+x,0)/arr.length,n:arr.length}))
     .filter(x=>x.n>=3).sort((a,b)=>b.m-a.m).slice(0,8);
   const em=['🌊','🍸','🌅','🏖️','🎭','🍺','🌇','⭐'];
-  $('#stories').innerHTML=list.map((x,i)=>`
-    <div class="st ${x.m>.25?'live':''}" onclick="toast('${x.b}: ${Math.round(x.m*100)} de energia média')">
+  $('#stories').innerHTML=list.map((x,i)=>{
+    const bn=x.b.replace(/'/g,'&#39;');
+    return `<div class="st ${x.m>.25?'live':''} ${filtroBairro===x.b?'sel':''}" onclick="setFiltro('${bn}')">
       <div class="ring"><div class="inner">${em[i%em.length]}</div></div>
       <div class="nm">${x.b}</div>${x.m>.25?`<div class="cnt">${hw(x.m)}</div>`:''}
-    </div>`).join('');
+    </div>`;}).join('');
 }
 
 /* ---- mapa ---- */
 function renderMap(){
   const m=$('#map');m.querySelectorAll('.bub,.heatblob').forEach(e=>e.remove());
   const top=VEN.slice().sort((a,b)=>b.viv-a.viv).slice(0,12);
+  if(!top.length)return;
   const lats=top.map(v=>v.lat),lngs=top.map(v=>v.lng);
   const la=Math.min(...lats),lb=Math.max(...lats),ga=Math.min(...lngs),gb=Math.max(...lngs);
   top.forEach(v=>{
     const x=8+((v.lng-ga)/((gb-ga)||1))*84, y=10+(1-(v.lat-la)/((lb-la)||1))*76;
     const col=hc(v.viv),sz=26+v.viv*34,s=scOf(v.categoria);
+    const nm=v.nome.replace(/'/g,'&#39;');
     const hb=document.createElement('div');hb.className='heatblob';
     hb.style.cssText=`left:${x}%;top:${y}%;width:${60+v.viv*90}px;height:${60+v.viv*90}px;transform:translate(-50%,-50%);background:${col}`;
     m.appendChild(hb);
     const el=document.createElement('div');el.className='bub';el.style.cssText=`left:${x}%;top:${y}%;--sz:${sz}px`;
     el.innerHTML=`<div class="img" style="background:${s.g}">${s.e}<div class="aura" style="background:${col}"></div></div>
       <div class="lb">${v.nome}</div>`;
-    el.onclick=()=>toast(`${v.nome} · ${hw(v.viv)} (previsão)`);
+    el.onclick=()=>showDetail(v.nome);
     m.appendChild(el);
   });
   const clima=VEN.find(v=>v.clima)?.clima;
@@ -387,8 +486,8 @@ function renderMap(){
 /* ---- lista ---- */
 function renderTray(){
   $('#traylist').innerHTML=VEN.slice().sort((a,b)=>b.viv-a.viv).slice(0,25).map(v=>{
-    const s=scOf(v.categoria);
-    return `<div class="acard" onclick="toast('${v.nome.replace(/'/g,'')}')">
+    const s=scOf(v.categoria);const nm=v.nome.replace(/'/g,'&#39;');
+    return `<div class="acard" onclick="showDetail('${nm}')">
       <div class="th2" style="background:${s.g}">${s.e}</div>
       <div class="ac"><div class="an">${v.nome}</div>
         <div class="am"><span class="dotv" style="background:${hc(v.viv)}"></span>${hw(v.viv)}
@@ -400,42 +499,69 @@ function renderTray(){
 /* ---- roteiro ---- */
 function renderBora(){
   const vivos=VEN.filter(v=>v.viv>.15).sort((a,b)=>b.viv-a.viv);
+  const usados=new Set();
   const pick=cats=>vivos.find(v=>cats.includes(v.categoria)&&!usados.has(v.nome));
-  const usados=new Set();const seq=[];
+  const seq=[];
   const jantar=pick(['restaurante','comida']);if(jantar){usados.add(jantar.nome);seq.push({v:jantar,r:'Comer',t:'agora'});}
   const som=pick(['show','bar','balada']);if(som){usados.add(som.nome);seq.push({v:som,r:'Curtir',t:'+1h30'});}
   const doce=pick(['comida']);if(doce){usados.add(doce.nome);seq.push({v:doce,r:'Sobremesa',t:'+2h45'});}
   const vista=pick(['mirante','praia','parque']);if(vista){usados.add(vista.nome);seq.push({v:vista,r:'Fechar a noite',t:'+3h15'});}
-  $('#rtlist').innerHTML=seq.length?seq.map(s=>{const sc2=scOf(s.v.categoria);
-    return `<div class="rstep"><div class="tb" style="background:${sc2.g}">${sc2.e}</div>
+  $('#rtlist').innerHTML=seq.length?seq.map(s=>{const sc2=scOf(s.v.categoria);const nm=s.v.nome.replace(/'/g,'&#39;');
+    return `<div class="rstep" onclick="showDetail('${nm}')"><div class="tb" style="background:${sc2.g}">${sc2.e}</div>
       <div><div class="rt-t">${s.t}</div><div class="rt-n">${s.v.nome}</div>
       <div class="rt-m">${s.r} · ${s.v.bairro||'JP'} · ${hw(s.v.viv)}</div></div></div>`;}).join('')
     :'<p style="color:var(--mut);font-size:13px">A cidade está quieta agora — os roteiros voltam quando algo acender. 🌙</p>';
-  $('#borasub').innerHTML=`Montado com o que está <b>mais vivo agora</b>, segundo a previsão do motor.`;
+  $('#borasub').innerHTML=`Montado com o que está <b>mais vivo agora</b>. Toque numa parada para traçar a rota.`;
 }
+
+/* ---- perfil / salvos ---- */
+function renderSaved(){
+  const list=[...SAVED].map(n=>VEN.find(v=>v.nome===n)).filter(Boolean);
+  $('#savedlist').innerHTML=list.length?list.map(v=>{
+    const s=scOf(v.categoria);const nm=v.nome.replace(/'/g,'&#39;');
+    return `<div class="rstep" onclick="showDetail('${nm}')"><div class="tb" style="background:${s.g}">${s.e}</div>
+      <div><div class="rt-t">${hw(v.viv)} agora</div><div class="rt-n">${v.nome}</div>
+      <div class="rt-m">${v.bairro||'JP'} · ${km(CENTRO,v).toFixed(1)}km · toque para abrir</div></div></div>`;}).join('')
+    :'<p style="color:var(--mut);font-size:13px;padding:0 2px">Nada salvo ainda. No feed, toque em 🔖 nos lugares que quiser guardar — eles ficam aqui, mesmo fechando o app.</p>';
+}
+
+/* ---- localização real ---- */
+$('#gpsBtn').onclick=()=>{
+  if(!navigator.geolocation){toast('Seu navegador não permite localização');return;}
+  toast('Buscando sua localização…');
+  navigator.geolocation.getCurrentPosition(p=>{
+    CENTRO={lat:p.coords.latitude,lng:p.coords.longitude};
+    $('#gpsBtn').classList.add('on');
+    $('#locTxt').textContent='Perto de você';
+    renderFeed();renderTray();renderSaved();
+    toast('📍 Distâncias recalculadas de onde você está');
+  },()=>toast('Não consegui sua localização — usando o centro de Tambaú'),{timeout:8000});
+};
 
 /* ---- nav & ui ---- */
 function nav(v){
-  if(v==='Perfil'){toast('Perfil — em breve');return;}
   document.querySelectorAll('.nav button[data-v]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
   $('#v'+v).classList.add('on');
+  if(v==='Perfil')renderSaved();
 }
 document.querySelectorAll('.nav button[data-v]').forEach(b=>b.onclick=()=>nav(b.dataset.v));
 $('#tMapa').onclick=()=>{$('#tray').classList.remove('on');$('#tMapa').classList.add('on');$('#tLista').classList.remove('on')};
 $('#tLista').onclick=()=>{$('#tray').classList.add('on');$('#tLista').classList.add('on');$('#tMapa').classList.remove('on')};
-$('#openPost').onclick=()=>$('#sheet').classList.add('on');
-$('#sheet').onclick=e=>{if(e.target===$('#sheet'))$('#sheet').classList.remove('on')};
+$('#openPost').onclick=()=>$('#psheet').classList.add('on');
+$('#psheet').onclick=e=>{if(e.target===$('#psheet'))$('#psheet').classList.remove('on')};
+$('#dsheet').onclick=e=>{if(e.target===$('#dsheet'))$('#dsheet').classList.remove('on')};
 let tm;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');
-  clearTimeout(tm);tm=setTimeout(()=>t.classList.remove('on'),2000)}
+  clearTimeout(tm);tm=setTimeout(()=>t.classList.remove('on'),2200)}
 
 /* ---- boot ---- */
 (async()=>{
   VEN=await loadData();
   $('#loading').style.display='none';
-  renderFeed();renderStories();renderMap();renderTray();renderBora();
+  updateBadge();
+  renderFeed();renderStories();renderMap();renderTray();renderBora();renderSaved();
   setTimeout(()=>{const h=document.querySelector('.swipehint');if(h)h.style.display='none'},6000);
-  setInterval(async()=>{VEN=await loadData();renderFeed();renderStories();renderMap();renderTray();renderBora();},5*60*1000);
+  setInterval(async()=>{VEN=await loadData();renderFeed();renderStories();renderMap();renderTray();renderBora();renderSaved();},5*60*1000);
 })();
 </script>
 </body>
