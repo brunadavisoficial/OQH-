@@ -316,6 +316,7 @@ const km=(a,b)=>{const R=6371,d=Math.PI/180;const x=(b.lat-a.lat)*d,y=(b.lng-a.l
   const h=Math.sin(x/2)**2+Math.cos(a.lat*d)*Math.cos(b.lat*d)*Math.sin(y/2)**2;
   return R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h));};
 const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 let VEN=[],filtroBairro=null;
 
 /* ---- persistência: salvos (funciona hospedado; some só se limpar dados do navegador) ---- */
@@ -329,12 +330,13 @@ function toggleSave(nome){
   persistSaved();updateBadge();renderSaved();
 }
 
-/* ---- compartilhar (nativo no celular; WhatsApp no PC) ---- */
+/* ---- "Anima?" (nativo no celular; WhatsApp no PC; link abre a ficha no app) ---- */
 async function shareVenue(v){
-  const texto=`OQHá? ${v.nome} está ${hw(v.viv).toLowerCase()} agora em ${v.bairro||'João Pessoa'} 🔥`;
-  const url=location.href.split('#')[0];
+  if(!v)return;
+  const texto=`Anima? 🔥 ${v.nome} tá ${hw(v.viv).toLowerCase()} agora${v.bairro?' em '+v.bairro:''}.`;
+  const url=location.href.split('#')[0]+'#anima='+encodeURIComponent(v.nome);
   if(navigator.share){
-    try{await navigator.share({title:'OQHá?',text:texto,url});return}catch(e){if(e.name==='AbortError')return}
+    try{await navigator.share({title:'Anima?',text:texto,url});return}catch(e){if(e.name==='AbortError')return}
   }
   window.open('https://wa.me/?text='+encodeURIComponent(texto+' '+url),'_blank');
 }
@@ -373,19 +375,20 @@ async function loadData(){
 function banner(cls,html){const b=$('#dbanner');b.className='dbanner '+cls;b.innerHTML=html;
   setTimeout(()=>b.style.display='none',9000);}
 
-/* ---- ficha do local ---- */
+/* ---- ficha do local (por índice: à prova de nomes duplicados/aspas) ---- */
 let CUR=null;
-function showDetail(nome){
-  const v=VEN.find(x=>x.nome===nome);if(!v)return;
+function showDetail(i,convite){
+  const v=VEN[i];if(!v)return;
   CUR=v;
   const s=scOf(v.categoria),t=trTxt[v.traj]||trTxt.pico,d=km(CENTRO,v).toFixed(1);
   const isSaved=SAVED.has(v.nome);
   $('#dcard').innerHTML=`
     <div class="grab"></div>
+    ${convite?`<div class="rule" style="background:rgba(255,77,125,.12);border:1px solid rgba(255,77,125,.35)"><span>💌</span><span><b>Anima?</b> Te chamaram pra cá!</span></div>`:''}
     <div class="dhero" style="background:${s.g}">
       <div class="de">${s.e}</div>
-      <div><div class="dn">${v.nome}</div>
-        <div class="dm">${v.bairro||'João Pessoa'} · ${d}km de você</div></div>
+      <div><div class="dn">${esc(v.nome)}</div>
+        <div class="dm">${esc(v.bairro||'João Pessoa')} · ${d}km de você</div></div>
     </div>
     <div class="dstats">
       <div class="dstat"><div class="l">Agora</div><div class="v" style="color:${hc(v.viv)}">${hw(v.viv)}</div></div>
@@ -394,9 +397,9 @@ function showDetail(nome){
     </div>
     <div class="dact">
       <button class="go" onclick="directions(CUR)"><span class="di">🧭</span>Como chegar</button>
-      <button class="sec ${isSaved?'saved':''}" onclick="toggleSave(CUR.nome);showDetail(CUR.nome)">
+      <button class="sec ${isSaved?'saved':''}" onclick="toggleSave(CUR.nome);showDetail(${i})">
         <span class="di">${isSaved?'✅':'🔖'}</span>${isSaved?'Salvo':'Salvar'}</button>
-      <button class="sec" onclick="shareVenue(CUR)"><span class="di">↗️</span>Enviar</button>
+      <button class="sec" onclick="shareVenue(CUR)"><span class="di">↗️</span>Anima?</button>
     </div>`;
   $('#dsheet').classList.add('on');
 }
@@ -414,24 +417,23 @@ function renderFeed(){
   $('#reels').innerHTML=top.map(v=>{
     const s=scOf(v.categoria),col=hc(v.viv),t=trTxt[v.traj]||trTxt.pico;
     const d=km(CENTRO,v).toFixed(1);
-    const nm=v.nome.replace(/'/g,'&#39;');
     const isSaved=SAVED.has(v.nome);
     return `<div class="reel">
       <div class="bgph" style="background:${s.g}"></div>
       <div class="emoji">${s.e}</div>
       <div class="rail">
-        <button class="rbtn" onclick="toggleSave('${nm}');renderFeed()"><span class="ic">${isSaved?'✅':'🔖'}</span><span>${isSaved?'salvo':'salvar'}</span></button>
-        <button class="rbtn" onclick="shareVenue(VEN.find(x=>x.nome==='${nm}'))"><span class="ic">↗️</span><span>enviar</span></button>
+        <button class="rbtn" onclick="toggleSave(VEN[${v.vid}].nome);renderFeed()"><span class="ic">${isSaved?'✅':'🔖'}</span><span>${isSaved?'salvo':'salvar'}</span></button>
+        <button class="rbtn" onclick="shareVenue(VEN[${v.vid}])"><span class="ic">↗️</span><span>Anima?</span></button>
       </div>
       <div class="rinfo">
-        <div class="rvenue">${v.nome}</div>
-        <div class="rbairro">${v.bairro||'João Pessoa'} · ${d}km</div>
+        <div class="rvenue">${esc(v.nome)}</div>
+        <div class="rbairro">${esc(v.bairro||'João Pessoa')} · ${d}km</div>
         <div class="rtags">
           <span class="rtag live" style="border-color:${col}66">● ${hw(v.viv)}</span>
           <span class="rtag" style="color:${t[2]}">${t[0]} ${t[1]}</span>
           <span class="rtag pred">previsão</span>
         </div>
-        <button class="rgo" onclick="showDetail('${nm}')">Bora pra lá →</button>
+        <button class="rgo" onclick="showDetail(${v.vid})">Bora pra lá →</button>
       </div></div>`;
   }).join('');
   const media=VEN.reduce((a,v)=>a+v.viv,0)/(VEN.length||1);
@@ -439,24 +441,25 @@ function renderFeed(){
 }
 
 /* ---- stories = filtro por bairro ---- */
+let BL=[];
 function setFiltro(b){
   filtroBairro=(filtroBairro===b)?null:b;
   renderFeed();renderStories();
   $('#reels').scrollTop=0;
   toast(filtroBairro?('Mostrando só '+filtroBairro):'Mostrando a cidade toda');
 }
+function setFiltroI(i){setFiltro(BL[i]?BL[i].b:null);}
 function renderStories(){
   const bz={};
   VEN.forEach(v=>{if(!v.bairro)return;(bz[v.bairro]=bz[v.bairro]||[]).push(v.viv);});
-  const list=Object.entries(bz).map(([b,arr])=>({b,m:arr.reduce((a,x)=>a+x,0)/arr.length,n:arr.length}))
+  BL=Object.entries(bz).map(([b,arr])=>({b,m:arr.reduce((a,x)=>a+x,0)/arr.length,n:arr.length}))
     .filter(x=>x.n>=3).sort((a,b)=>b.m-a.m).slice(0,8);
   const em=['🌊','🍸','🌅','🏖️','🎭','🍺','🌇','⭐'];
-  $('#stories').innerHTML=list.map((x,i)=>{
-    const bn=x.b.replace(/'/g,'&#39;');
-    return `<div class="st ${x.m>.25?'live':''} ${filtroBairro===x.b?'sel':''}" onclick="setFiltro('${bn}')">
+  $('#stories').innerHTML=BL.map((x,i)=>`
+    <div class="st ${x.m>.25?'live':''} ${filtroBairro===x.b?'sel':''}" onclick="setFiltroI(${i})">
       <div class="ring"><div class="inner">${em[i%em.length]}</div></div>
-      <div class="nm">${x.b}</div>${x.m>.25?`<div class="cnt">${hw(x.m)}</div>`:''}
-    </div>`;}).join('');
+      <div class="nm">${esc(x.b)}</div>${x.m>.25?`<div class="cnt">${hw(x.m)}</div>`:''}
+    </div>`).join('');
 }
 
 /* ---- mapa ---- */
@@ -476,7 +479,7 @@ function renderMap(){
     const el=document.createElement('div');el.className='bub';el.style.cssText=`left:${x}%;top:${y}%;--sz:${sz}px`;
     el.innerHTML=`<div class="img" style="background:${s.g}">${s.e}<div class="aura" style="background:${col}"></div></div>
       <div class="lb">${v.nome}</div>`;
-    el.onclick=()=>showDetail(v.nome);
+    el.onclick=()=>showDetail(v.vid);
     m.appendChild(el);
   });
   const clima=VEN.find(v=>v.clima)?.clima;
@@ -486,12 +489,12 @@ function renderMap(){
 /* ---- lista ---- */
 function renderTray(){
   $('#traylist').innerHTML=VEN.slice().sort((a,b)=>b.viv-a.viv).slice(0,25).map(v=>{
-    const s=scOf(v.categoria);const nm=v.nome.replace(/'/g,'&#39;');
-    return `<div class="acard" onclick="showDetail('${nm}')">
+    const s=scOf(v.categoria);
+    return `<div class="acard" onclick="showDetail(${v.vid})">
       <div class="th2" style="background:${s.g}">${s.e}</div>
-      <div class="ac"><div class="an">${v.nome}</div>
+      <div class="ac"><div class="an">${esc(v.nome)}</div>
         <div class="am"><span class="dotv" style="background:${hc(v.viv)}"></span>${hw(v.viv)}
-          <span>·</span><span>${v.bairro||'JP'}</span><span>·</span><span>${km(CENTRO,v).toFixed(1)}km</span></div>
+          <span>·</span><span>${esc(v.bairro||'JP')}</span><span>·</span><span>${km(CENTRO,v).toFixed(1)}km</span></div>
         <div class="aw">${(trTxt[v.traj]||trTxt.pico)[1]} · vivacidade ${Math.round(v.viv*100)}</div></div>
     </div>`;}).join('');
 }
@@ -506,10 +509,10 @@ function renderBora(){
   const som=pick(['show','bar','balada']);if(som){usados.add(som.nome);seq.push({v:som,r:'Curtir',t:'+1h30'});}
   const doce=pick(['comida']);if(doce){usados.add(doce.nome);seq.push({v:doce,r:'Sobremesa',t:'+2h45'});}
   const vista=pick(['mirante','praia','parque']);if(vista){usados.add(vista.nome);seq.push({v:vista,r:'Fechar a noite',t:'+3h15'});}
-  $('#rtlist').innerHTML=seq.length?seq.map(s=>{const sc2=scOf(s.v.categoria);const nm=s.v.nome.replace(/'/g,'&#39;');
-    return `<div class="rstep" onclick="showDetail('${nm}')"><div class="tb" style="background:${sc2.g}">${sc2.e}</div>
-      <div><div class="rt-t">${s.t}</div><div class="rt-n">${s.v.nome}</div>
-      <div class="rt-m">${s.r} · ${s.v.bairro||'JP'} · ${hw(s.v.viv)}</div></div></div>`;}).join('')
+  $('#rtlist').innerHTML=seq.length?seq.map(s=>{const sc2=scOf(s.v.categoria);
+    return `<div class="rstep" onclick="showDetail(${s.v.vid})"><div class="tb" style="background:${sc2.g}">${sc2.e}</div>
+      <div><div class="rt-t">${s.t}</div><div class="rt-n">${esc(s.v.nome)}</div>
+      <div class="rt-m">${s.r} · ${esc(s.v.bairro||'JP')} · ${hw(s.v.viv)}</div></div></div>`;}).join('')
     :'<p style="color:var(--mut);font-size:13px">A cidade está quieta agora — os roteiros voltam quando algo acender. 🌙</p>';
   $('#borasub').innerHTML=`Montado com o que está <b>mais vivo agora</b>. Toque numa parada para traçar a rota.`;
 }
@@ -518,10 +521,10 @@ function renderBora(){
 function renderSaved(){
   const list=[...SAVED].map(n=>VEN.find(v=>v.nome===n)).filter(Boolean);
   $('#savedlist').innerHTML=list.length?list.map(v=>{
-    const s=scOf(v.categoria);const nm=v.nome.replace(/'/g,'&#39;');
-    return `<div class="rstep" onclick="showDetail('${nm}')"><div class="tb" style="background:${s.g}">${s.e}</div>
-      <div><div class="rt-t">${hw(v.viv)} agora</div><div class="rt-n">${v.nome}</div>
-      <div class="rt-m">${v.bairro||'JP'} · ${km(CENTRO,v).toFixed(1)}km · toque para abrir</div></div></div>`;}).join('')
+    const s=scOf(v.categoria);
+    return `<div class="rstep" onclick="showDetail(${v.vid})"><div class="tb" style="background:${s.g}">${s.e}</div>
+      <div><div class="rt-t">${hw(v.viv)} agora</div><div class="rt-n">${esc(v.nome)}</div>
+      <div class="rt-m">${esc(v.bairro||'JP')} · ${km(CENTRO,v).toFixed(1)}km · toque para abrir</div></div></div>`;}).join('')
     :'<p style="color:var(--mut);font-size:13px;padding:0 2px">Nada salvo ainda. No feed, toque em 🔖 nos lugares que quiser guardar — eles ficam aqui, mesmo fechando o app.</p>';
 }
 
@@ -555,13 +558,21 @@ let tm;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on
   clearTimeout(tm);tm=setTimeout(()=>t.classList.remove('on'),2200)}
 
 /* ---- boot ---- */
+function tagVids(){VEN.forEach((v,i)=>v.vid=i);}
 (async()=>{
-  VEN=await loadData();
+  VEN=await loadData();tagVids();
   $('#loading').style.display='none';
   updateBadge();
   renderFeed();renderStories();renderMap();renderTray();renderBora();renderSaved();
-  setTimeout(()=>{const h=document.querySelector('.swipehint');if(h)h.style.display='none'},6000);
-  setInterval(async()=>{VEN=await loadData();renderFeed();renderStories();renderMap();renderTray();renderBora();renderSaved();},5*60*1000);
+  // convite "Anima?" — link abre direto na ficha do lugar
+  const h=location.hash.match(/anima=([^&]+)/);
+  if(h){
+    const alvo=decodeURIComponent(h[1]);
+    const v=VEN.find(x=>x.nome===alvo);
+    if(v){showDetail(v.vid,true);}
+  }
+  setTimeout(()=>{const el=document.querySelector('.swipehint');if(el)el.style.display='none'},6000);
+  setInterval(async()=>{VEN=await loadData();tagVids();renderFeed();renderStories();renderMap();renderTray();renderBora();renderSaved();},5*60*1000);
 })();
 </script>
 </body>
