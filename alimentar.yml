@@ -1,0 +1,50 @@
+# OQHá · roda as Camadas 1 e 2 automaticamente, de graça, no GitHub Actions.
+# Coloque este arquivo em:  .github/workflows/alimentar.yml
+#
+# Antes de funcionar, cadastre os segredos no repositório:
+#   Settings → Secrets and variables → Actions → New repository secret
+#     SUPABASE_URL          = https://seuprojeto.supabase.co
+#     SUPABASE_SERVICE_KEY  = eyJ...  (a service_role — NUNCA a coloque no código!)
+#
+# Dica: mantenha o repositório PÚBLICO → Actions ilimitado e grátis.
+# (Se for privado, o free são 2.000 min/mês, mais que suficiente pra isso.)
+
+name: Alimentar OQHá
+
+on:
+  schedule:
+    # Camada 2 (vivacidade) a cada 20 min. Horário em UTC; JP = UTC-3.
+    - cron: '*/20 * * * *'
+    # Camada 1 (cadastro de locais) uma vez por semana — domingo 06:00 UTC (03:00 JP).
+    - cron: '0 6 * * 0'
+  workflow_dispatch: {}   # botão pra rodar na mão quando quiser
+
+jobs:
+  vivacidade:
+    # roda em toda execução de 20 min E também no semanal
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Camada 2 — calcular vivacidade
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node vivacidade_engine.js
+
+  cadastro:
+    # só no agendamento semanal (as 06:00 de domingo)
+    if: github.event.schedule == '0 6 * * 0'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Camada 1 — atualizar cadastro (OSM)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node ingest_overpass.js
