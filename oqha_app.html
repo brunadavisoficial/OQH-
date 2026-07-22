@@ -200,6 +200,14 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .dact .sec.saved{color:var(--amber);border-color:rgba(255,176,32,.5)}
 .dact .di{font-size:18px}
 
+.linput{width:100%;padding:14px;border-radius:13px;border:1px solid var(--line);background:var(--panel2);
+  color:var(--txt);font-family:'Inter';font-size:15px;margin-bottom:10px;-webkit-user-select:text;user-select:text}
+.linput:focus{outline:none;border-color:var(--amber)}
+.lbtn{width:100%;padding:15px;border:none;border-radius:15px;font-family:'Space Grotesk';font-weight:700;
+  font-size:15px;background:linear-gradient(135deg,var(--amber),#FF7A3D);color:#1a0e00;cursor:pointer;margin-top:2px}
+.lbtn:disabled{opacity:.5}
+.lsub{font-size:11.5px;color:var(--mut);text-align:center;margin-top:10px;line-height:1.5}
+
 .toast{position:fixed;left:50%;bottom:calc(var(--navh) + 18px);transform:translateX(-50%) translateY(16px);
   z-index:300;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 17px;
   font-size:12.5px;opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center}
@@ -274,12 +282,56 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
 <!-- sheet: detalhe do local -->
 <div class="sheet" id="dsheet"><div class="scard" id="dcard"></div></div>
 
-<!-- sheet: postar -->
+<!-- sheet: menu do + -->
 <div class="sheet" id="psheet"><div class="scard">
   <div class="grab"></div>
-  <h3 style="margin-bottom:10px">📸 Postar foto no local</h3>
-  <div class="rule"><span>🚧</span><span><b>Em breve.</b> As fotos são a próxima fase — precisam de login e câmera. Hoje o OQHá mostra a <b>previsão</b> do motor.</span></div>
-  <div class="rule"><span>⏳</span><span>Quando existirem: fotos <b>somem em 24h</b> e têm <b>aviso de print</b>.</span></div>
+  <div id="pmenu">
+    <h3 style="margin-bottom:12px">O que você quer fazer?</h3>
+    <button class="lbtn" style="margin-bottom:10px" onclick="abrirCadastro()">📍 Cadastrar um lugar novo</button>
+    <div class="rule"><span>📸</span><span><b>Postar foto — em breve.</b> As fotos que somem em 24h são a próxima fase.</span></div>
+  </div>
+  <div id="pform" style="display:none">
+    <h3 style="margin-bottom:4px">Cadastrar lugar</h3>
+    <p style="font-size:12px;color:var(--mut);margin-bottom:13px">Coloque um lugar de João Pessoa no radar.</p>
+    <input class="linput" id="cnome" placeholder="Nome do lugar *">
+    <input class="linput" id="cend" placeholder="Endereço (rua e número) *">
+    <input class="linput" id="cbairro" placeholder="Bairro">
+    <select class="linput" id="ccat">
+      <option value="bar">🍺 Bar</option>
+      <option value="restaurante">🍽️ Restaurante</option>
+      <option value="comida">🌮 Lanche / comida</option>
+      <option value="balada">🕺 Balada</option>
+      <option value="show">🎶 Música ao vivo</option>
+      <option value="praia">🌅 Praia</option>
+      <option value="mirante">🔭 Mirante</option>
+      <option value="parque">🌳 Parque</option>
+      <option value="feira">🧺 Feira</option>
+      <option value="esporte">⚽ Esporte</option>
+      <option value="turismo">🗿 Ponto turístico</option>
+    </select>
+    <input class="linput" id="cinsta" placeholder="Instagram (só o @, opcional)">
+    <button class="lbtn" id="csalvar">Cadastrar no radar</button>
+    <div class="lsub">O lugar entra no mapa e ganha vivacidade calculada em até 20 min.</div>
+  </div>
+</div></div>
+
+<!-- sheet: login -->
+<div class="sheet" id="lsheet"><div class="scard">
+  <div class="grab"></div>
+  <div id="lstep1">
+    <h3 style="margin-bottom:6px">Entrar no OQHá</h3>
+    <p style="font-size:12.5px;color:var(--mut);margin-bottom:14px;line-height:1.5">Pra salvar lugares, chamar alguém com <b style="color:var(--txt)">Anima?</b> e traçar rotas, crie sua conta grátis — só o e-mail, sem senha.</p>
+    <input class="linput" id="lemail" type="email" placeholder="seu@email.com" autocomplete="email">
+    <button class="lbtn" id="lsend">Receber código</button>
+    <div class="lsub">Enviamos um código de 6 dígitos pro seu e-mail.</div>
+  </div>
+  <div id="lstep2" style="display:none">
+    <h3 style="margin-bottom:6px">Digite o código</h3>
+    <p style="font-size:12.5px;color:var(--mut);margin-bottom:14px">Mandamos pra <b style="color:var(--txt)" id="lechosen"></b> (olha o spam também).</p>
+    <input class="linput" id="lcode" inputmode="numeric" maxlength="6" placeholder="000000" style="text-align:center;letter-spacing:.4em;font-size:20px">
+    <button class="lbtn" id="lverify">Entrar</button>
+    <div class="lsub"><a href="#" id="lback" style="color:var(--mut)">usar outro e-mail</a></div>
+  </div>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -317,6 +369,23 @@ const km=(a,b)=>{const R=6371,d=Math.PI/180;const x=(b.lat-a.lat)*d,y=(b.lng-a.l
   return R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h));};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+
+/* ---- CONTA (Supabase Auth por código de e-mail) ---- */
+function loadSess(){try{return JSON.parse(localStorage.getItem('oqha_sessao')||'null')}catch(e){return null}}
+let SESS=loadSess();
+let pendente=null;
+function requireAuth(fn){
+  if(SESS){fn();return;}
+  pendente=fn;
+  document.getElementById('lstep1').style.display='';
+  document.getElementById('lstep2').style.display='none';
+  document.getElementById('lsheet').classList.add('on');
+}
+function sair(){SESS=null;try{localStorage.removeItem('oqha_sessao')}catch(e){}renderSaved();toast('Você saiu da conta');}
+/* ações com gate de conta */
+function saveG(vid){requireAuth(()=>{toggleSave(VEN[vid].nome);renderFeed();});}
+function shareG(vid){requireAuth(()=>shareVenue(VEN[vid]));}
+function dirG(){requireAuth(()=>directions(CUR));}
 let VEN=[],filtroBairro=null;
 
 /* ---- persistência: salvos (funciona hospedado; some só se limpar dados do navegador) ---- */
@@ -358,11 +427,16 @@ async function loadData(){
   const cfgOk=CONFIG.SUPABASE_URL.startsWith('https://')&&CONFIG.SUPABASE_PUBLISHABLE_KEY.startsWith('sb_');
   if(!cfgOk){banner('demo','<b>Modo demonstração.</b> Cole sua chave publishable no CONFIG do arquivo para ver João Pessoa de verdade.');return DEMO;}
   try{
-    const u=`${CONFIG.SUPABASE_URL}/rest/v1/estabelecimentos?select=nome,categoria,lat,lng,bairro,vivacidade(viv_prevista,trajetoria,clima)&limit=1000`;
-    const r=await fetch(u,{headers:{apikey:CONFIG.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${CONFIG.SUPABASE_PUBLISHABLE_KEY}`}});
+    const hdr={apikey:CONFIG.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${CONFIG.SUPABASE_PUBLISHABLE_KEY}`};
+    let u=`${CONFIG.SUPABASE_URL}/rest/v1/estabelecimentos?select=nome,categoria,lat,lng,bairro,instagram,vivacidade(viv_prevista,trajetoria,clima)&limit=1000`;
+    let r=await fetch(u,{headers:hdr});
+    if(r.status===400){ // coluna instagram ainda não existe → consulta sem ela
+      u=`${CONFIG.SUPABASE_URL}/rest/v1/estabelecimentos?select=nome,categoria,lat,lng,bairro,vivacidade(viv_prevista,trajetoria,clima)&limit=1000`;
+      r=await fetch(u,{headers:hdr});
+    }
     if(!r.ok)throw new Error('HTTP '+r.status);
     const rows=await r.json();
-    const out=rows.map(x=>({nome:x.nome,categoria:x.categoria,lat:x.lat,lng:x.lng,bairro:x.bairro,
+    const out=rows.map(x=>({nome:x.nome,categoria:x.categoria,lat:x.lat,lng:x.lng,bairro:x.bairro,instagram:x.instagram||null,
       viv:x.vivacidade?.viv_prevista??0,traj:x.vivacidade?.trajetoria||'pico',clima:x.vivacidade?.clima}))
       .filter(x=>x.lat&&x.lng);
     if(!out.length)throw new Error('sem dados');
@@ -396,11 +470,13 @@ function showDetail(i,convite){
       <div class="dstat"><div class="l">Fonte</div><div class="v" style="color:#B9CDFF">previsão</div></div>
     </div>
     <div class="dact">
-      <button class="go" onclick="directions(CUR)"><span class="di">🧭</span>Como chegar</button>
-      <button class="sec ${isSaved?'saved':''}" onclick="toggleSave(CUR.nome);showDetail(${i})">
+      <button class="go" onclick="dirG()"><span class="di">🧭</span>Como chegar</button>
+      <button class="sec ${isSaved?'saved':''}" onclick="requireAuth(()=>{toggleSave(CUR.nome);showDetail(${i})})">
         <span class="di">${isSaved?'✅':'🔖'}</span>${isSaved?'Salvo':'Salvar'}</button>
-      <button class="sec" onclick="shareVenue(CUR)"><span class="di">↗️</span>Anima?</button>
-    </div>`;
+      <button class="sec" onclick="requireAuth(()=>shareVenue(CUR))"><span class="di">↗️</span>Anima?</button>
+    </div>
+    ${v.instagram?`<button class="lbtn" style="margin-top:10px;background:linear-gradient(135deg,#833AB4,#FD1D1D,#F77737);color:#fff"
+      onclick="window.open('https://instagram.com/${encodeURIComponent(v.instagram)}','_blank')">📸 Ver stories no Instagram · @${esc(v.instagram)}</button>`:''}`;
   $('#dsheet').classList.add('on');
 }
 
@@ -422,8 +498,8 @@ function renderFeed(){
       <div class="bgph" style="background:${s.g}"></div>
       <div class="emoji">${s.e}</div>
       <div class="rail">
-        <button class="rbtn" onclick="toggleSave(VEN[${v.vid}].nome);renderFeed()"><span class="ic">${isSaved?'✅':'🔖'}</span><span>${isSaved?'salvo':'salvar'}</span></button>
-        <button class="rbtn" onclick="shareVenue(VEN[${v.vid}])"><span class="ic">↗️</span><span>Anima?</span></button>
+        <button class="rbtn" onclick="saveG(${v.vid})"><span class="ic">${isSaved?'✅':'🔖'}</span><span>${isSaved?'salvo':'salvar'}</span></button>
+        <button class="rbtn" onclick="shareG(${v.vid})"><span class="ic">↗️</span><span>Anima?</span></button>
       </div>
       <div class="rinfo">
         <div class="rvenue">${esc(v.nome)}</div>
@@ -519,13 +595,16 @@ function renderBora(){
 
 /* ---- perfil / salvos ---- */
 function renderSaved(){
+  const conta=SESS
+    ?`<div class="rule" style="margin:0 0 12px"><span>👤</span><span>Conectado como <b>${esc(SESS.email)}</b> · <a href="#" onclick="sair();return false" style="color:var(--mut)">sair</a></span></div>`
+    :`<div class="rule" style="margin:0 0 12px"><span>👤</span><span>Você ainda não tem conta. <a href="#" onclick="requireAuth(()=>{});return false" style="color:var(--amber)"><b>Criar agora</b></a> — só o e-mail.</span></div>`;
   const list=[...SAVED].map(n=>VEN.find(v=>v.nome===n)).filter(Boolean);
-  $('#savedlist').innerHTML=list.length?list.map(v=>{
+  $('#savedlist').innerHTML=conta+(list.length?list.map(v=>{
     const s=scOf(v.categoria);
     return `<div class="rstep" onclick="showDetail(${v.vid})"><div class="tb" style="background:${s.g}">${s.e}</div>
       <div><div class="rt-t">${hw(v.viv)} agora</div><div class="rt-n">${esc(v.nome)}</div>
       <div class="rt-m">${esc(v.bairro||'JP')} · ${km(CENTRO,v).toFixed(1)}km · toque para abrir</div></div></div>`;}).join('')
-    :'<p style="color:var(--mut);font-size:13px;padding:0 2px">Nada salvo ainda. No feed, toque em 🔖 nos lugares que quiser guardar — eles ficam aqui, mesmo fechando o app.</p>';
+    :'<p style="color:var(--mut);font-size:13px;padding:0 2px">Nada salvo ainda. No feed, toque em 🔖 nos lugares que quiser guardar — eles ficam aqui, mesmo fechando o app.</p>');
 }
 
 /* ---- localização real ---- */
@@ -551,9 +630,88 @@ function nav(v){
 document.querySelectorAll('.nav button[data-v]').forEach(b=>b.onclick=()=>nav(b.dataset.v));
 $('#tMapa').onclick=()=>{$('#tray').classList.remove('on');$('#tMapa').classList.add('on');$('#tLista').classList.remove('on')};
 $('#tLista').onclick=()=>{$('#tray').classList.add('on');$('#tLista').classList.add('on');$('#tMapa').classList.remove('on')};
-$('#openPost').onclick=()=>$('#psheet').classList.add('on');
+$('#openPost').onclick=()=>{
+  $('#pmenu').style.display='';$('#pform').style.display='none';
+  $('#psheet').classList.add('on');
+};
+function abrirCadastro(){
+  requireAuth(()=>{
+    $('#psheet').classList.add('on');
+    $('#pmenu').style.display='none';$('#pform').style.display='';
+  });
+}
+const slugify=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+$('#csalvar').onclick=async()=>{
+  const nome=$('#cnome').value.trim(), end=$('#cend').value.trim();
+  const bairro=$('#cbairro').value.trim(), cat=$('#ccat').value;
+  const insta=$('#cinsta').value.trim().replace(/^@/,'').replace(/^https?:\/\/(www\.)?instagram\.com\//i,'').replace(/\/.*$/,'');
+  if(nome.length<2){toast('Digite o nome do lugar');return;}
+  if(end.length<5){toast('Digite o endereço (rua e número)');return;}
+  const b=$('#csalvar');b.disabled=true;b.textContent='Localizando no mapa…';
+  try{
+    const q=`${end}, ${bairro?bairro+', ':''}João Pessoa, PB, Brasil`;
+    const g=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=br&q='+encodeURIComponent(q));
+    const j=await g.json();
+    if(!j.length)throw new Error('não achei esse endereço — tente só "rua, número"');
+    const lat=+j[0].lat,lng=+j[0].lon;
+    const BASEM={balada:.9,bar:.8,show:.82,praia:.9,mirante:.8,restaurante:.78,comida:.65,feira:.72,parque:.6,esporte:.7,turismo:.65};
+    b.textContent='Salvando…';
+    const r=await fetch(CONFIG.SUPABASE_URL+'/rest/v1/estabelecimentos',{
+      method:'POST',
+      headers:{apikey:CONFIG.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${SESS.at}`,
+        'Content-Type':'application/json',Prefer:'return=minimal'},
+      body:JSON.stringify({osm_id:'app/'+slugify(nome)+'-'+Date.now().toString(36),fonte:'app',
+        nome,categoria:cat,lat,lng,bairro:bairro||null,endereco:end,
+        instagram:insta||null,base_magnitude:BASEM[cat]||.7,cadastrado_por:SESS.email})
+    });
+    if(!r.ok)throw new Error('HTTP '+r.status+' — confira se rodou o SQL de permissão');
+    $('#psheet').classList.remove('on');
+    toast('✅ '+nome+' entrou no radar!');
+    VEN=await loadData();tagVids();renderFeed();renderStories();renderMap();renderTray();renderBora();
+    ['cnome','cend','cbairro','cinsta'].forEach(id=>$('#'+id).value='');
+  }catch(e){toast('Ops: '+e.message);}
+  b.disabled=false;b.textContent='Cadastrar no radar';
+};
 $('#psheet').onclick=e=>{if(e.target===$('#psheet'))$('#psheet').classList.remove('on')};
 $('#dsheet').onclick=e=>{if(e.target===$('#dsheet'))$('#dsheet').classList.remove('on')};
+/* login */
+$('#lsend').onclick=async()=>{
+  const email=$('#lemail').value.trim();
+  if(!/.+@.+\..+/.test(email)){toast('Digite um e-mail válido');return;}
+  $('#lsend').disabled=true;$('#lsend').textContent='Enviando…';
+  try{
+    const r=await fetch(CONFIG.SUPABASE_URL+'/auth/v1/otp',{method:'POST',
+      headers:{apikey:CONFIG.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,create_user:true})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.msg||e.error_description||'HTTP '+r.status);}
+    $('#lechosen').textContent=email;
+    $('#lstep1').style.display='none';$('#lstep2').style.display='';
+    $('#lcode').focus();
+  }catch(e){toast('Não consegui enviar: '+e.message);}
+  $('#lsend').disabled=false;$('#lsend').textContent='Receber código';
+};
+$('#lverify').onclick=async()=>{
+  const email=$('#lechosen').textContent,token=$('#lcode').value.trim();
+  if(token.length<6){toast('O código tem 6 dígitos');return;}
+  $('#lverify').disabled=true;$('#lverify').textContent='Conferindo…';
+  try{
+    const r=await fetch(CONFIG.SUPABASE_URL+'/auth/v1/verify',{method:'POST',
+      headers:{apikey:CONFIG.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({type:'email',email,token})});
+    const j=await r.json();
+    if(!j.access_token)throw new Error(j.msg||j.error_description||'código inválido');
+    SESS={email,at:j.access_token,em:Date.now()};
+    try{localStorage.setItem('oqha_sessao',JSON.stringify(SESS))}catch(e){}
+    $('#lsheet').classList.remove('on');
+    toast('✅ Bem-vindo(a) ao OQHá!');
+    renderSaved();
+    if(pendente){const f=pendente;pendente=null;f();}
+  }catch(e){toast('Não deu: '+e.message);}
+  $('#lverify').disabled=false;$('#lverify').textContent='Entrar';
+};
+$('#lback').onclick=e=>{e.preventDefault();$('#lstep1').style.display='';$('#lstep2').style.display='none';};
+$('#lsheet').onclick=e=>{if(e.target===$('#lsheet'))$('#lsheet').classList.remove('on')};
 let tm;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');
   clearTimeout(tm);tm=setTimeout(()=>t.classList.remove('on'),2200)}
 
